@@ -1,7 +1,10 @@
 import {ComparisionMatrix} from "./model/ComparisionMatrix";
 import {Criteria} from "../data/model/Criteria";
 import {Goal} from "../data/model/Goal";
+import {Alternative} from "../data/model/Alternative";
 
 export interface GetCompareMatrixUseCase {
-    getAllCriteriaMatrix(): Array<ComparisionMatrix<Criteria, Goal>>;
+    getCriteriaMatrix(): ComparisionMatrix<Criteria, Goal>;
+
+    getAllAlternativeMatrix(): Array<ComparisionMatrix<Alternative, Criteria>>;
 }

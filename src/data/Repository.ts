@@ -1,8 +1,8 @@
 import {Criteria} from "./model/Criteria";
 import {Alternative} from "./model/Alternative";
-import {Score} from "./model/Score";
 import {Goal} from "./model/Goal";
 import {RatingItem} from "./model/RatingItem";
+import {ComparisionItem} from "./model/ComparisionItem";
 
 export class Repository {
 
@@ -10,8 +10,8 @@ export class Repository {
         public goal: Goal,
         private readonly criteriaArray: Array<Criteria> = [],
         private readonly alternativeArray: Array<Alternative> = [],
-        public criteriaMap: Map<[Goal, Criteria, Criteria], Score>, // Goal and Criterias
-        public alternativeMap: Map<[Criteria, Alternative, Alternative], Score>,
+        public criteriaCompareValues: Array<ComparisionItem<Criteria, Goal>> = [],
+        public alternativesCompareValues: Array<ComparisionItem<Alternative, Criteria>> = []
     ) {
 
     }
@@ -20,25 +20,28 @@ export class Repository {
         this.goal = goal;
     }
 
-    insertCriteria(criteria: Criteria) {
-        this.insertRatingItem(criteria, this.criteriaArray);
+    insertCriteria(criteria: Criteria): Array<Criteria> {
+        return this.insertRatingItem(criteria, this.criteriaArray) as Criteria[];
     }
 
-    insertAlternative(alternative: Alternative) {
-        this.insertRatingItem(alternative, this.alternativeArray);
+    insertAlternative(alternative: Alternative): Array<Alternative> {
+        return this.insertRatingItem(alternative, this.alternativeArray) as Alternative[];
     }
 
 
-    private insertRatingItem(item: RatingItem, to: Array<RatingItem>) {
+    private insertRatingItem(item: RatingItem, to: Array<RatingItem>): Array<RatingItem> {
         if (to.indexOf(item) === -1)
             to.push(item);
+        return to;
     }
 
-    public updateCriteriaMap(values: Map<[Goal, Criteria, Criteria], Score>) {
-        this.criteriaMap = values;
+    getCriteria(): Array<Criteria> {
+        return this.criteriaArray;
     }
 
-    public updateAlternativeMap(values: Map<[Goal, Alternative, Alternative], Score>) {
-        this.alternativeMap = values;
+    getAlternatives(): Array<Alternative> {
+        return this.alternativeArray;
     }
+
+
 }

@@ -1,5 +1,5 @@
-import {RatingItem} from "../../data/model/RatingItem";
-import {Score} from "../../data/model/Score";
+import {RatingItem} from "./RatingItem";
+import {Score} from "./Score";
 
 export class ComparisionItem<item extends RatingItem, goal extends RatingItem> {
     /**

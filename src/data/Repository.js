@@ -1,29 +1,29 @@
 export class Repository {
-    constructor(goal, criteriaArray = [], alternativeArray = [], criteriaMap, // Goal and Criterias
-    alternativeMap) {
+    constructor(goal, criteriaArray = [], alternativeArray = [], criteriaCompareValues = [], alternativesCompareValues = []) {
         this.goal = goal;
         this.criteriaArray = criteriaArray;
         this.alternativeArray = alternativeArray;
-        this.criteriaMap = criteriaMap;
-        this.alternativeMap = alternativeMap;
+        this.criteriaCompareValues = criteriaCompareValues;
+        this.alternativesCompareValues = alternativesCompareValues;
     }
     setGoal(goal) {
         this.goal = goal;
     }
     insertCriteria(criteria) {
-        this.insertRatingItem(criteria, this.criteriaArray);
+        return this.insertRatingItem(criteria, this.criteriaArray);
     }
     insertAlternative(alternative) {
-        this.insertRatingItem(alternative, this.alternativeArray);
+        return this.insertRatingItem(alternative, this.alternativeArray);
     }
     insertRatingItem(item, to) {
         if (to.indexOf(item) === -1)
             to.push(item);
+        return to;
     }
-    updateCriteriaMap(values) {
-        this.criteriaMap = values;
+    getCriteria() {
+        return this.criteriaArray;
     }
-    updateAlternativeMap(values) {
-        this.alternativeMap = values;
+    getAlternatives() {
+        return this.alternativeArray;
     }
 }

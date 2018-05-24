@@ -1,11 +1,8 @@
 import {RatingItem} from "../../data/model/RatingItem";
+import {ComparisionItem} from "../../data/model/ComparisionItem";
 
 export class ComparisionMatrix<item extends RatingItem, goal extends RatingItem> {
-    constructor(private readonly items: Array<item>, private readonly topic: goal) {
+    constructor(public rows: Array<ComparisionItem<item, goal>>) {
 
-    }
-
-    updateItem(item: item) {
-        this.items[this.items.indexOf(item)] = item;
     }
 }
