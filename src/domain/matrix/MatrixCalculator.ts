@@ -19,11 +19,11 @@ export class MatrixCalculator {
      *     (B, C) - SCORE
      *     (C, D) - SCORE
      *
-     * @param {Array<Criteria>} criteria
+     * @param {Array<Criteria>} values
      * @param {Goal} goal
      * @returns {ComparisionMatrix<Criteria, Goal>}
      */
-    createComparisionAmtrix(values: Array<RatingItem>, goal: RatingItem): ComparisionMatrix<RatingItem, RatingItem> {
+    createComparisionMatrix(values: Array<RatingItem>, goal: RatingItem): ComparisionMatrix<RatingItem, RatingItem> {
         const items: Array<ComparisionItem<RatingItem, RatingItem>> = [];
 
         for (let i = 0; i < values.length; i++) {

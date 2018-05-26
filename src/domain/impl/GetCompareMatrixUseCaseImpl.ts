@@ -12,11 +12,16 @@ export class GetCompareMatrixUseCaseImpl implements GetCompareMatrixUseCase {
     }
 
     getAllAlternativeMatrix(): Array<ComparisionMatrix<Alternative, Criteria>> {
-        return undefined;
+        const matrices = [];
+        this.repository.getCriteria().forEach((criteria => {
+            const matrix = this.matrixCalculator.createComparisionMatrix(this.repository.getAlternatives(), criteria);
+            matrices.push(matrix);
+        }));
+        return matrices;
     }
 
     getCriteriaMatrix(): ComparisionMatrix<Criteria, Goal> {
-        return this.matrixCalculator.createComparisionAmtrix(this.repository.getCriteria(), this.repository.goal) as ComparisionMatrix<Criteria, Goal>;
+        return this.matrixCalculator.createComparisionMatrix(this.repository.getCriteria(), this.repository.goal) as ComparisionMatrix<Criteria, Goal>;
     }
 
 }

@@ -16,7 +16,7 @@ it('gets compare matrix for all criterias regarding the goal', () => {
     const criteriaE = new Criteria('E');
     const criterias: Array<Criteria> = [criteriaA, criteriaB, criteriaC, criteriaD, criteriaE];
 
-    const result = subject.createComparisionAmtrix(criterias, goal);
+    const result = subject.createComparisionMatrix(criterias, goal);
 
     const expectedRows = [
         new ComparisionItem(criteriaA, criteriaB, goal, new Score(0)),
