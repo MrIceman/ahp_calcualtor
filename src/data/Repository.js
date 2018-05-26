@@ -1,10 +1,8 @@
 export class Repository {
-    constructor(goal, criteriaArray = [], alternativeArray = [], criteriaCompareValues = [], alternativesCompareValues = []) {
+    constructor(goal, criteriaArray = [], alternativeArray = []) {
         this.goal = goal;
         this.criteriaArray = criteriaArray;
         this.alternativeArray = alternativeArray;
-        this.criteriaCompareValues = criteriaCompareValues;
-        this.alternativesCompareValues = alternativesCompareValues;
     }
     setGoal(goal) {
         this.goal = goal;
@@ -14,6 +12,12 @@ export class Repository {
     }
     insertAlternative(alternative) {
         return this.insertRatingItem(alternative, this.alternativeArray);
+    }
+    updateCriteria(criteria) {
+        this.criteriaArray.map((crit) => {
+            if (crit.name === criteria.name)
+                return criteria;
+        });
     }
     insertRatingItem(item, to) {
         if (to.indexOf(item) === -1)

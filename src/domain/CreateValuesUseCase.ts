@@ -1,7 +1,11 @@
+import {Goal} from "../data/model/Goal";
+import {Criteria} from "../data/model/Criteria";
+import {Alternative} from "../data/model/Alternative";
+
 export interface CreateValuesUseCase {
-    setAlternatives(alternatives: Array<string>);
+    insertAlternative(alternatives: Alternative): void;
 
-    setCriteria(criteria: Array<string>);
+    insertCriteria(criteria: Criteria): void;
 
-    setGoal(goal: String);
+    setGoal(goal: Goal): void;
 }

@@ -1,4 +1,3 @@
-import {instance, mock, when} from "ts-mockito";
 import {Repository} from "../../data/Repository";
 import {GetCompareMatrixUseCaseImpl} from "../../domain/impl/GetCompareMatrixUseCaseImpl";
 import {Criteria} from "../../data/model/Criteria";
@@ -8,6 +7,7 @@ import {ComparisionItem} from "../../data/model/ComparisionItem";
 import {Score} from "../../data/model/Score";
 import {MatrixCalculator} from "../../domain/matrix/MatrixCalculator";
 import {Alternative} from "../../data/model/Alternative";
+import {instance, mock, when} from "ts-mockito";
 
 const repositoryMock = mock(Repository);
 const repository = instance(repositoryMock);
@@ -45,7 +45,7 @@ it('gets compare matrix for all criterias regarding the goal', () => {
     expect(result).toEqual(expectedMatrix);
 });
 
-it('gets all alternative matrices for all criterias',  () => {
+it('gets all alternative matrices for all criterias', () => {
     when(repositoryMock.getCriteria()).thenReturn(criterias);
     when(repositoryMock.getAlternatives()).thenReturn(alternatives);
     const expectedRowsA = [

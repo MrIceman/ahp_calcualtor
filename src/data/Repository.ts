@@ -2,7 +2,6 @@ import {Criteria} from "./model/Criteria";
 import {Alternative} from "./model/Alternative";
 import {Goal} from "./model/Goal";
 import {RatingItem} from "./model/RatingItem";
-import {ComparisionItem} from "./model/ComparisionItem";
 
 export class Repository {
 
@@ -10,8 +9,6 @@ export class Repository {
         public goal: Goal,
         private readonly criteriaArray: Array<Criteria> = [],
         private readonly alternativeArray: Array<Alternative> = [],
-        public criteriaCompareValues: Array<ComparisionItem<Criteria, Goal>> = [],
-        public alternativesCompareValues: Array<ComparisionItem<Alternative, Criteria>> = []
     ) {
 
     }
@@ -28,6 +25,21 @@ export class Repository {
         return this.insertRatingItem(alternative, this.alternativeArray) as Alternative[];
     }
 
+    public updateCriteria(criteria: Criteria) {
+        for (let i = 0; i < this.criteriaArray.length; i++) {
+            if (this.criteriaArray[i].name == criteria.name) {
+                this.criteriaArray[i] = criteria;
+            }
+        }
+    }
+
+    public updateAlternative(alternative: Alternative) {
+        for (let i = 0; i < this.alternativeArray.length; i++) {
+            if (this.alternativeArray[i].name == alternative.name) {
+                this.alternativeArray[i] = alternative;
+            }
+        }
+    }
 
     private insertRatingItem(item: RatingItem, to: Array<RatingItem>): Array<RatingItem> {
         if (to.indexOf(item) === -1)

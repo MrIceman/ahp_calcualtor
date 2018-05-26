@@ -12,9 +12,9 @@ export class GetCompareMatrixUseCaseImpl implements GetCompareMatrixUseCase {
     }
 
     getAllAlternativeMatrix(): Array<ComparisionMatrix<Alternative, Criteria>> {
-        const matrices = [];
+        const matrices: Array<ComparisionMatrix<Alternative, Criteria>> = [];
         this.repository.getCriteria().forEach((criteria => {
-            const matrix = this.matrixCalculator.createComparisionMatrix(this.repository.getAlternatives(), criteria);
+            const matrix: ComparisionMatrix<Alternative, Criteria> = this.matrixCalculator.createComparisionMatrix(this.repository.getAlternatives(), criteria) as ComparisionMatrix<Alternative, Criteria>;
             matrices.push(matrix);
         }));
         return matrices;
