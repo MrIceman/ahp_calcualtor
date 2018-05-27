@@ -13,7 +13,7 @@ const crit = new Criteria('success');
 const repository = new Repository(new Goal('money'), [crit], [alternativeA, alternativeB]);
 const subject = new PersistCompareMatrixUseCaseImpl(repository);
 
-it('persists all criterias with scores in favor of alternative B', () => {
+it('persists all alternatives with scores in favor of alternative B', () => {
     const row = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, crit, new Score(16));
     const matrix = new ComparisionMatrix<Alternative, Criteria>([row]);
 
@@ -26,7 +26,7 @@ it('persists all criterias with scores in favor of alternative B', () => {
     expect(result).toEqual([newAlternativeA, newAlternativeB]);
 });
 
-it('persists all criterias with scores in favor of alternative A', () => {
+it('persists all alternatives with scores in favor of alternative A', () => {
     const row = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, crit, new Score(0));
     const matrix = new ComparisionMatrix<Alternative, Criteria>([row]);
 
@@ -39,7 +39,7 @@ it('persists all criterias with scores in favor of alternative A', () => {
     expect(result).toEqual([newAlternativeA, newAlternativeB]);
 });
 
-it('persists all criterias with equal scores', () => {
+it('persists all alternatives with equal scores', () => {
     const row = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, crit, new Score(8));
     const matrix = new ComparisionMatrix<Alternative, Criteria>([row]);
 
@@ -73,3 +73,63 @@ it('persists multiple rows with scores in favor of alternative B', () => {
     const result = repository.getAlternatives();
     expect(result).toEqual([newAlternativeA, newAlternativeB]);
 });
+
+// Testing persisting of criteria values
+
+it('persists all criteria with scores in favor of alternative B', () => {
+    const criteriaTime = new Criteria('time');
+    const criteriaLove = new Criteria('love');
+    repository.clearCriteria();
+    repository.insertCriteria(criteriaTime);
+    repository.insertCriteria(criteriaLove);
+
+    const row = new ComparisionItem<Criteria, Goal>(criteriaTime, criteriaLove, new Goal('business'), new Score(16));
+    const matrix = new ComparisionMatrix<Criteria, Goal>([row]);
+
+    subject.persistCriteriaMatrix(matrix);
+
+    const newCriteriaTime = new Criteria( 'time', 1 / 9);
+    const newCriteriaLove = new Criteria( 'love', 9);
+
+    const result = repository.getCriteria();
+    expect(result).toEqual([newCriteriaTime, newCriteriaLove]);
+});
+
+it('persists all alternatives with scores in favor of alternative A', () => {
+    const criteriaTime = new Criteria('time');
+    const criteriaLove = new Criteria('love');
+    repository.clearCriteria();
+    repository.insertCriteria(criteriaTime);
+    repository.insertCriteria(criteriaLove);
+
+    const row = new ComparisionItem<Criteria, Goal>(criteriaTime, criteriaLove, new Goal('business'), new Score(0));
+    const matrix = new ComparisionMatrix<Criteria, Goal>([row]);
+
+    subject.persistCriteriaMatrix(matrix);
+
+    const newCriteriaTime = new Criteria( 'time', 9);
+    const newCriteriaLove = new Criteria( 'love', 1 / 9);
+
+    const result = repository.getCriteria();
+    expect(result).toEqual([newCriteriaTime, newCriteriaLove]);
+});
+
+it('persists all alternatives with equal scores', () => {
+    const criteriaTime = new Criteria('time');
+    const criteriaLove = new Criteria('love');
+    repository.clearCriteria();
+    repository.insertCriteria(criteriaTime);
+    repository.insertCriteria(criteriaLove);
+
+    const row = new ComparisionItem<Criteria, Goal>(criteriaTime, criteriaLove, new Goal('business'), new Score(8));
+    const matrix = new ComparisionMatrix<Criteria, Goal>([row]);
+
+    subject.persistCriteriaMatrix(matrix);
+
+    const newCriteriaTime = new Criteria( 'time', 1);
+    const newCriteriaLove = new Criteria( 'love', 1);
+
+    const result = repository.getCriteria();
+    expect(result).toEqual([newCriteriaTime, newCriteriaLove]);
+});
+
