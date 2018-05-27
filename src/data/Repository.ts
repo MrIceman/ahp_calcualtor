@@ -7,8 +7,8 @@ export class Repository {
 
     constructor(
         public goal: Goal,
-        private readonly criteriaArray: Array<Criteria> = [],
-        private readonly alternativeArray: Array<Alternative> = [],
+        private criteriaArray: Array<Criteria> = [],
+        private alternativeArray: Array<Alternative> = [],
     ) {
 
     }
@@ -55,5 +55,12 @@ export class Repository {
         return this.alternativeArray;
     }
 
+    clearCriteria() {
+        this.criteriaArray = [];
+    }
+
+    clearAlternatives() {
+        this.alternativeArray = [];
+    }
 
 }

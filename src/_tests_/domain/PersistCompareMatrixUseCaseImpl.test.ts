@@ -1,4 +1,3 @@
-import {instance, mock} from "ts-mockito";
 import {Repository} from "../../data/Repository";
 import {PersistCompareMatrixUseCaseImpl} from "../../domain/impl/PersistCompareMatrixUseCaseImpl";
 import {ComparisionMatrix} from "../../domain/model/ComparisionMatrix";
@@ -6,15 +5,71 @@ import {Alternative} from "../../data/model/Alternative";
 import {Criteria} from "../../data/model/Criteria";
 import {ComparisionItem} from "../../data/model/ComparisionItem";
 import {Score} from "../../data/model/Score";
+import {Goal} from "../../data/model/Goal";
 
-const repositoryMock = mock(Repository);
-const subject = new PersistCompareMatrixUseCaseImpl(instance(repositoryMock));
 const alternativeA = new Alternative('alternative A');
 const alternativeB = new Alternative('alternative B');
-const crit = new Criteria('suc');
+const crit = new Criteria('success');
+const repository = new Repository(new Goal('money'), [crit], [alternativeA, alternativeB]);
+const subject = new PersistCompareMatrixUseCaseImpl(repository);
 
-it('persists all criterias with scores', () => {
-    const row = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, crit, new Score(17));
+it('persists all criterias with scores in favor of alternative B', () => {
+    const row = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, crit, new Score(16));
     const matrix = new ComparisionMatrix<Alternative, Criteria>([row]);
-    subject.persistAlternativeMatrix(matrix)
+
+    subject.persistAlternativeMatrix(matrix);
+
+    const newAlternativeA = new Alternative('alternative A', new Map([[crit, 1 / 9]]));
+    const newAlternativeB = new Alternative('alternative B', new Map([[crit, 9]]));
+
+    const result = repository.getAlternatives();
+    expect(result).toEqual([newAlternativeA, newAlternativeB]);
+});
+
+it('persists all criterias with scores in favor of alternative A', () => {
+    const row = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, crit, new Score(0));
+    const matrix = new ComparisionMatrix<Alternative, Criteria>([row]);
+
+    subject.persistAlternativeMatrix(matrix);
+
+    const newAlternativeA = new Alternative('alternative A', new Map([[crit, 9]]));
+    const newAlternativeB = new Alternative('alternative B', new Map([[crit, 1 / 9]]));
+
+    const result = repository.getAlternatives();
+    expect(result).toEqual([newAlternativeA, newAlternativeB]);
+});
+
+it('persists all criterias with equal scores', () => {
+    const row = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, crit, new Score(8));
+    const matrix = new ComparisionMatrix<Alternative, Criteria>([row]);
+
+    subject.persistAlternativeMatrix(matrix);
+
+    const newAlternativeA = new Alternative('alternative A', new Map([[crit, 1]]));
+    const newAlternativeB = new Alternative('alternative B', new Map([[crit, 1]]));
+
+    const result = repository.getAlternatives();
+    expect(result).toEqual([newAlternativeA, newAlternativeB]);
+});
+
+it('persists multiple rows with scores in favor of alternative B', () => {
+    const criteriaWealth = new Criteria('Wealth');
+    const criteriaHappiness = new Criteria('Happiness');
+    const alternativeA = new Alternative('alternative A');
+    const alternativeB = new Alternative('alternative B');
+    const rowA = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, criteriaWealth, new Score(16));
+    const rowB = new ComparisionItem<Alternative, Criteria>(alternativeA, alternativeB, criteriaHappiness, new Score(4));
+    const matrix = new ComparisionMatrix<Alternative, Criteria>([rowA, rowB]);
+    repository.clearAlternatives();
+    repository.clearCriteria();
+    repository.insertCriteria(criteriaWealth);
+    repository.insertCriteria(criteriaHappiness);
+    repository.insertAlternative(alternativeA);
+    repository.insertAlternative(alternativeB);
+    subject.persistAlternativeMatrix(matrix);
+    const newAlternativeA = new Alternative('alternative A', new Map([[criteriaWealth, 1 / 9], [criteriaHappiness, 5]]));
+    const newAlternativeB = new Alternative('alternative B', new Map([[criteriaWealth, 9], [criteriaHappiness, 1 / 5]]));
+
+    const result = repository.getAlternatives();
+    expect(result).toEqual([newAlternativeA, newAlternativeB]);
 });

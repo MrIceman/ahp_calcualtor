@@ -12,20 +12,19 @@ export class PersistCompareMatrixUseCaseImpl implements PersistCompareMatrixUseC
 
     persistAlternativeMatrix(matrix: ComparisionMatrix<Alternative, Criteria>) {
         matrix.rows.forEach((item) => {
-
             const ratingValue = item.rating.score;
 
-            const alternative = item.itemA;
-            alternative.criteriaScore.set(item.target, ratingValue == 8 ? 1 : ratingValue > 8 ? ratingValue - 7 : (1 / (9 - ratingValue)));
-            this.repository.updateAlternative(alternative);
+            const alternativeA = item.itemA;
+            alternativeA.criteriaScore.set(item.target, ratingValue == 8 ? 1 : ratingValue < 8 ? 9 - ratingValue : (1 / (ratingValue - 7)));
+            this.repository.updateAlternative(alternativeA);
 
             const alternativeB = item.itemB;
-            alternativeB.criteriaScore.set(item.target, ratingValue == 8 ? 1 : ratingValue < 8 ? 9 - ratingValue : (1 / (ratingValue - 9)));
+            alternativeB.criteriaScore.set(item.target, ratingValue == 8 ? 1 : ratingValue > 8 ? ratingValue - 7 : (1 / (9 - ratingValue)));
             this.repository.updateAlternative(alternativeB);
+
         })
     }
 
     persistCriteriaMatrix(matrix: ComparisionMatrix<Criteria, Goal>) {
     }
-
 }
