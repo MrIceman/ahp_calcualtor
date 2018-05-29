@@ -37,4 +37,17 @@ export class MatrixCalculator {
 
         return new ComparisionMatrix<RatingItem, RatingItem>(items);
     }
+
+    calculateRatings(criteria: Array<Criteria>) {
+        // Build a 2 dimensional Matrix for calculating in form of [i][i] where is the amount of criteria
+        const calcMatrix: number[][] = new Array([criteria.length][criteria.length]);
+        for (let i = 0; i < criteria.length; i++) {
+            for (let j = 0; j < criteria.length; j++) {
+                if (i == j)
+                    calcMatrix[i][j] = 1;
+                else
+                    calcMatrix[i][j] = criteria[j].goalScore;
+            }
+        }
+    }
 }
