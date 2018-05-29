@@ -1,7 +1,6 @@
 import {ValidateConsistencyUseCase} from "../ValidateConsistencyUseCase";
 import {Repository} from "../../data/Repository";
 import {Criteria} from "../../data/model/Criteria";
-import {anyNumber} from "ts-mockito";
 import {Alternative} from "../../data/model/Alternative";
 
 
@@ -15,8 +14,23 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
 
     validateAlternatives(): boolean {
         const alternatives = this.repository.getAlternatives();
+        alternatives.forEach(async (alt) => {
+            // we are going to validate for every single criteria whether the alternatives are consistent or not
+            const comparables: Array<comparable> = [];
 
-        return false;
+            await alt.criteriaScore.forEach((value) => {
+                const comparable = this.makeComparableAlternative(alt, value);
+                comparables.push(comparable);
+            });
+
+            console.log('test');
+
+            if (!await this.validateCompareItems(comparables)) {
+                return false;
+            }
+        });
+
+        return true;
     }
 
     validateCriteria(): boolean {
@@ -59,27 +73,7 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
             return this.makeComparableCriteria(value)
         });
 
-        //Iterate through comparables
-        for (const comparable of comparables) {
-            // get all lower comparables
-            for (const lower of comparable.value.lower) {
-                // get the lowerCmp of the lower value
-                const lowerCmp = comparables.find((cmp) => cmp.value.key === lower);
-                for (const lowerHigher of lowerCmp.value.lower) {
-                    // check if the lower values lowerCmp are in the higher values of
-                    // comparable
-                    if (comparable.value.higher.some((sourceHigher) => sourceHigher === lowerHigher)
-                        ||
-                        comparable.value.even.some((sourceHigher) => sourceHigher === lowerHigher)
-                    ) {
-                        return false;
-                    } else
-                        continue;
-                }
-
-            }
-        }
-        return true;
+        return this.validateCompareItems(comparables);
     }
 
     public makeComparableCriteria(criteria: Criteria): comparable {
@@ -105,28 +99,55 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
         };
     }
 
-    public makeComparableAlternatives(alternatives: Array<Alternative>): comparable {
+    public makeComparableAlternative(alternative: Alternative, comparedTo: Map<Alternative, number>): comparable {
+
         const lower: Array<string> = [];
         const higher: Array<string> = [];
         const even: Array<string> = [];
-        const key: Array<string> = [];
 
         // prepare data structure
-        alternatives.forEach((alternative) => {
-            const name = alternative.name;
-            let criteria = '';
-            let score = 0;
-
-            alternative.criteriaScore
+        comparedTo.forEach((value, comparedAlternative) => {
+            if (value < 1) {
+                higher.push(comparedAlternative.name);
+            } else if (value > 1) {
+                lower.push(comparedAlternative.name);
+            } else
+                even.push(comparedAlternative.name);
         });
 
         return {
             value: {
-                key: '',
+                key: alternative.name,
                 lower: lower,
                 higher: higher,
                 even: even
             }
         };
+
+    }
+
+    private validateCompareItems(comparables: Array<comparable>): boolean {
+        //Iterate through comparables
+        for (const comparable of comparables) {
+            // get all lower comparables
+            for (const lower of comparable.value.lower) {
+                // get the lowerCmp of the lower value
+                const lowerCmp = comparables.find((cmp) => cmp.value.key === lower);
+                for (const lowerHigher of lowerCmp.value.lower) {
+                    // check if the lower values lowerCmp are in the higher values of
+                    // comparable
+                    if (comparable.value.higher.some((sourceHigher) => sourceHigher === lowerHigher)
+                        ||
+                        comparable.value.even.some((sourceHigher) => sourceHigher === lowerHigher)
+                    ) {
+                        return false;
+                    } else
+                        continue;
+                }
+
+            }
+        }
+
+        return true;
     }
 }

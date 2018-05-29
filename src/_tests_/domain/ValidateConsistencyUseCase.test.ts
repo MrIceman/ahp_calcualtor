@@ -2,6 +2,7 @@ import {ValidateConsistencyUseCaseImpl} from "../../domain/impl/ValidateConsiste
 import {Repository} from "../../data/Repository";
 import {Goal} from "../../data/model/Goal";
 import {Criteria} from "../../data/model/Criteria";
+import {Alternative} from "../../data/model/Alternative";
 
 const repository = new Repository(new Goal(''), [], []);
 const subject = new ValidateConsistencyUseCaseImpl(repository);
@@ -155,3 +156,103 @@ it('consistency check with evens', () => {
     const result = subject.validateCriteria();
     expect(result).toEqual(false);
 });
+
+it('tests make comparable alternativesd array', async () => {
+    const criteriaWealth = new Criteria('Wealth');
+    const alternativeA = new Alternative('alternative A');
+    const alternativeB = new Alternative('alternative B');
+    const alternativeC = new Alternative('alternative C');
+
+    alternativeA.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 9], [alternativeC, 1 / 4]]));
+
+    alternativeB.criteriaScore.set(criteriaWealth, new Map([[alternativeA, 1 / 9], [alternativeC, 6]]));
+
+    alternativeC.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 1 / 6], [alternativeA, 4]]));
+
+    repository.clearAlternatives();
+    repository.clearCriteria();
+    repository.insertCriteria(criteriaWealth);
+    repository.insertAlternative(alternativeA);
+    repository.insertAlternative(alternativeB);
+    repository.insertAlternative(alternativeC);
+
+    await alternativeA.criteriaScore.forEach((value) => {
+        const result = subject.makeComparableAlternative(alternativeA, value);
+        expect(result).toEqual({
+            value: {
+                even: [],
+                higher: [alternativeC.name],
+                lower: [alternativeB.name],
+                key: alternativeA.name
+            }
+        });
+    });
+
+    await alternativeB.criteriaScore.forEach((value) => {
+        const result = subject.makeComparableAlternative(alternativeB, value);
+        expect(result).toEqual({
+            value: {
+                even: [],
+                higher: [alternativeA.name],
+                lower: [alternativeC.name],
+                key: alternativeB.name
+            }
+        });
+    });
+
+    await alternativeC.criteriaScore.forEach((value) => {
+        const result = subject.makeComparableAlternative(alternativeC, value);
+        expect(result).toEqual({
+            value: {
+                even: [],
+                higher: [alternativeB.name],
+                lower: [alternativeA.name],
+                key: alternativeC.name
+            }
+        });
+    });
+});
+
+it('checks alternatives for positive consistency', () => {
+    const criteriaWealth = new Criteria('Wealth');
+    const alternativeA = new Alternative('alternative A');
+    const alternativeB = new Alternative('alternative B');
+    alternativeA.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 1 / 9]]));
+    alternativeB.criteriaScore.set(criteriaWealth, new Map([[alternativeA, 9]]));
+    repository.insertCriteria(criteriaWealth);
+    repository.insertAlternative(alternativeA);
+    repository.insertAlternative(alternativeB);
+
+    const result = subject.validateAlternatives();
+    expect(result).toEqual(true);
+});
+
+/**
+
+ A > B , A < C
+ B < A, B > C
+
+ it('checks alternatives for negative conssitency', () => {
+    const criteriaWealth = new Criteria('Wealth');
+    const alternativeA = new Alternative('alternative A');
+    const alternativeB = new Alternative('alternative B');
+    const alternativeC = new Alternative('alternative C');
+
+    alternativeA.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 9], [alternativeC, 1 / 4]]));
+
+    alternativeB.criteriaScore.set(criteriaWealth, new Map([[alternativeA, 1 / 9], [alternativeC, 6]]));
+
+    alternativeC.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 1 / 6], [alternativeA, 4]]));
+
+    repository.clearAlternatives();
+    repository.clearCriteria();
+    repository.insertCriteria(criteriaWealth);
+    repository.insertAlternative(alternativeA);
+    repository.insertAlternative(alternativeB);
+    repository.insertAlternative(alternativeC);
+
+    const result = subject.validateAlternatives();
+    expect(result).toEqual(false);
+});
+
+ */
