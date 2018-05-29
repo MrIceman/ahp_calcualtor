@@ -39,7 +39,7 @@ export class MatrixCalculator {
     }
 
     calculateRatings(criteria: Array<Criteria>) {
-        // Build a 2 dimensional Matrix for calculating in form of [i][i] where is the amount of criteria
+        // Build a 2 dimensional Matrix for calculating in form of [i][i] where is the amount of key
         const calcMatrix: number[][] = new Array([criteria.length][criteria.length]);
         for (let i = 0; i < criteria.length; i++) {
             for (let j = 0; j < criteria.length; j++) {

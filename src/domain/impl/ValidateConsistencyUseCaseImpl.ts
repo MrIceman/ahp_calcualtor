@@ -2,10 +2,11 @@ import {ValidateConsistencyUseCase} from "../ValidateConsistencyUseCase";
 import {Repository} from "../../data/Repository";
 import {Criteria} from "../../data/model/Criteria";
 import {anyNumber} from "ts-mockito";
+import {Alternative} from "../../data/model/Alternative";
 
 
 interface comparable {
-    value: { criteria: string, lower: Array<string>, higher: Array<string>, even: Array<string> }
+    value: { key: string, lower: Array<string>, higher: Array<string>, even: Array<string> }
 }
 
 export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCase {
@@ -13,6 +14,8 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
     }
 
     validateAlternatives(): boolean {
+        const alternatives = this.repository.getAlternatives();
+
         return false;
     }
 
@@ -53,7 +56,7 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
 
         const criteria = this.repository.getCriteria();
         const comparables: Array<comparable> = criteria.map((value) => {
-            return this.makeComparable(value)
+            return this.makeComparableCriteria(value)
         });
 
         //Iterate through comparables
@@ -61,7 +64,7 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
             // get all lower comparables
             for (const lower of comparable.value.lower) {
                 // get the lowerCmp of the lower value
-                const lowerCmp = comparables.find((cmp) => cmp.value.criteria === lower);
+                const lowerCmp = comparables.find((cmp) => cmp.value.key === lower);
                 for (const lowerHigher of lowerCmp.value.lower) {
                     // check if the lower values lowerCmp are in the higher values of
                     // comparable
@@ -79,7 +82,7 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
         return true;
     }
 
-    public makeComparable(criteria: Criteria): comparable {
+    public makeComparableCriteria(criteria: Criteria): comparable {
         const lower: Array<string> = [];
         const higher: Array<string> = [];
         const even: Array<string> = [];
@@ -94,7 +97,7 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
         });
         return {
             value: {
-                criteria: criteria.name,
+                key: criteria.name,
                 lower: lower,
                 higher: higher,
                 even: even
@@ -102,4 +105,28 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
         };
     }
 
+    public makeComparableAlternatives(alternatives: Array<Alternative>): comparable {
+        const lower: Array<string> = [];
+        const higher: Array<string> = [];
+        const even: Array<string> = [];
+        const key: Array<string> = [];
+
+        // prepare data structure
+        alternatives.forEach((alternative) => {
+            const name = alternative.name;
+            let criteria = '';
+            let score = 0;
+
+            alternative.criteriaScore
+        });
+
+        return {
+            value: {
+                key: '',
+                lower: lower,
+                higher: higher,
+                even: even
+            }
+        };
+    }
 }

@@ -34,12 +34,12 @@ repository.insertCriteria(criteriaHappiness);
 it('makes correct comparable map', () => {
 
     const criterias = repository.getCriteria();
-    const result = criterias.map((value) => subject.makeComparable(value));
+    const result = criterias.map((value) => subject.makeComparableCriteria(value));
 
     expect(result).toEqual([
         {
             value: {
-                criteria: "time",
+                key: "time",
                 lower: ["love", "happiness"],
                 higher: ["money"],
                 even: []
@@ -47,7 +47,7 @@ it('makes correct comparable map', () => {
         },
         {
             value: {
-                criteria: "love",
+                key: "love",
                 lower: ["money"],
                 higher: ["time"],
                 even: ["happiness"]
@@ -55,7 +55,7 @@ it('makes correct comparable map', () => {
         },
         {
             value: {
-                criteria: "money",
+                key: "money",
                 lower: ["time"],
                 higher: ["happiness", "love"],
                 even: []
@@ -63,7 +63,7 @@ it('makes correct comparable map', () => {
         },
         {
             value: {
-                criteria: "happiness",
+                key: "happiness",
                 lower: ["money"],
                 higher: ["time"],
                 even: ["love"]
@@ -72,12 +72,12 @@ it('makes correct comparable map', () => {
     ]);
 });
 
-it('returns false because criteria map is inconsistent', () => {
+it('returns false because key map is inconsistent', () => {
     const result = subject.validateCriteria();
     expect(result).toEqual(false);
 });
 
-it('returns true because criteria map is consistent', () => {
+it('returns true because key map is consistent', () => {
     repository.clearCriteria();
     repository.clearAlternatives();
 
@@ -112,7 +112,7 @@ it('returns true because criteria map is consistent', () => {
     expect(result).toEqual(true);
 });
 
-it('another positive check for inconsistency criteria', () => {
+it('another positive check for inconsistency key', () => {
     const cA = new Criteria('A');
     const cB = new Criteria('B');
     const cC = new Criteria('C');

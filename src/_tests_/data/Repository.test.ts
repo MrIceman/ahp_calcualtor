@@ -11,7 +11,7 @@ const alternative = new Alternative('hustle');
 const alternativeB = new Alternative('code');
 const subject = new Repository(instance(goalMock), [criteria, criteriaB], [alternative, alternativeB]);
 
-it('updates criteria correctly', () => {
+it('updates key correctly', () => {
 
     const newCriteria = new Criteria('love', 4, -1);
 

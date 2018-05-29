@@ -16,18 +16,19 @@ export class PersistCompareMatrixUseCaseImpl implements PersistCompareMatrixUseC
             const ratingValue = item.rating.score;
 
             const alternativeA = item.itemA;
-            alternativeA.criteriaScore.set(item.target, ratingValue == 8 ? 1 : ratingValue < 8 ? 9 - ratingValue : (1 / (ratingValue - 7)));
+            const alternativeB = item.itemB;
+            alternativeA.criteriaScore.set(item.target,
+                new Map([[alternativeB, ratingValue == 8 ? 1 : ratingValue < 8 ? 9 - ratingValue : (1 / (ratingValue - 7))]]));
             this.repository.updateAlternative(alternativeA);
 
-            const alternativeB = item.itemB;
-            alternativeB.criteriaScore.set(item.target, ratingValue == 8 ? 1 : ratingValue > 8 ? ratingValue - 7 : (1 / (9 - ratingValue)));
+            alternativeB.criteriaScore.set(item.target,
+                new Map([[alternativeA, ratingValue == 8 ? 1 : ratingValue > 8 ? ratingValue - 7 : (1 / (9 - ratingValue))]]));
             this.repository.updateAlternative(alternativeB);
 
         })
     }
 
     persistCriteriaMatrix(matrix: ComparisionMatrix<Criteria, Goal>) {
-        // TODO falsche Implementierung. Es müssen die einzelnen Vergleichszwerte zwischen den Kriterien im Bezug aufs Ziel betrachtet werden
         matrix.rows.forEach((item) => {
             const ratingValue = item.rating.score;
 
