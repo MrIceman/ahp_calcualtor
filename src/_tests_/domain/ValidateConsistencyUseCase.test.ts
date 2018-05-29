@@ -213,7 +213,7 @@ it('tests make comparable alternativesd array', async () => {
     });
 });
 
-it('checks alternatives for positive consistency', () => {
+it('checks alternatives for positive consistency', async () => {
     const criteriaWealth = new Criteria('Wealth');
     const alternativeA = new Alternative('alternative A');
     const alternativeB = new Alternative('alternative B');
@@ -223,16 +223,17 @@ it('checks alternatives for positive consistency', () => {
     repository.insertAlternative(alternativeA);
     repository.insertAlternative(alternativeB);
 
-    const result = subject.validateAlternatives();
+    const result = await subject.validateAlternatives().catch(() => fail());
     expect(result).toEqual(true);
 });
 
-/**
 
- A > B , A < C
- B < A, B > C
+it('checks alternatives for negative conssitency', async () => {
+    /*
+      A > B , A < C
+      B < A, B > C
 
- it('checks alternatives for negative conssitency', () => {
+     */
     const criteriaWealth = new Criteria('Wealth');
     const alternativeA = new Alternative('alternative A');
     const alternativeB = new Alternative('alternative B');
@@ -251,8 +252,8 @@ it('checks alternatives for positive consistency', () => {
     repository.insertAlternative(alternativeB);
     repository.insertAlternative(alternativeC);
 
-    const result = subject.validateAlternatives();
+    const result = await subject.validateAlternatives().catch(() => fail());
+
     expect(result).toEqual(false);
 });
 
- */

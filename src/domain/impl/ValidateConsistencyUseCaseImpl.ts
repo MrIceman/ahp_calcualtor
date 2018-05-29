@@ -12,25 +12,32 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
     constructor(public readonly repository: Repository) {
     }
 
-    validateAlternatives(): boolean {
-        const alternatives = this.repository.getAlternatives();
-        alternatives.forEach(async (alt) => {
-            // we are going to validate for every single criteria whether the alternatives are consistent or not
-            const comparables: Array<comparable> = [];
+    validateAlternatives(): Promise<boolean> {
+        return new Promise<boolean>(async (resolve, reject) => {
+            const alternatives = await this.repository.getAlternatives();
+            let error = false;
+            let counter = alternatives.length;
 
-            await alt.criteriaScore.forEach((value) => {
-                const comparable = this.makeComparableAlternative(alt, value);
-                comparables.push(comparable);
-            });
+            for (const alt of alternatives) {
+                const comparables: Array<comparable> = [];
+                // we are going to validate for every single criteria whether the alternatives are consistent or not
+                await alt.criteriaScore.forEach(async (value) => {
+                    const comparable = await this.makeComparableAlternative(alt, value);
+                    comparables.push(comparable);
+                    if (!await this.validateCompareItems(comparables)) {
+                        reject(false);
+                    }
+                });
 
-            console.log('test');
-
-            if (!await this.validateCompareItems(comparables)) {
-                return false;
+                counter--;
             }
+            while (counter != 0) {
+
+            }
+            resolve(true);
+
         });
 
-        return true;
     }
 
     validateCriteria(): boolean {
@@ -132,17 +139,21 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
             // get all lower comparables
             for (const lower of comparable.value.lower) {
                 // get the lowerCmp of the lower value
-                const lowerCmp = comparables.find((cmp) => cmp.value.key === lower);
-                for (const lowerHigher of lowerCmp.value.lower) {
-                    // check if the lower values lowerCmp are in the higher values of
-                    // comparable
-                    if (comparable.value.higher.some((sourceHigher) => sourceHigher === lowerHigher)
-                        ||
-                        comparable.value.even.some((sourceHigher) => sourceHigher === lowerHigher)
-                    ) {
-                        return false;
-                    } else
-                        continue;
+                for (const cmp of comparables) {
+                    if (cmp.value.key === lower) {
+                        const lowerCmp = cmp;
+                        for (const lowerHigher of lowerCmp.value.lower) {
+                            // check if the lower values lowerCmp are in the higher values of
+                            // comparable
+                            if (comparable.value.higher.some((sourceHigher) => sourceHigher === lowerHigher)
+                                ||
+                                comparable.value.even.some((sourceHigher) => sourceHigher === lowerHigher)
+                            ) {
+                                return false;
+                            } else
+                                continue;
+                        }
+                    }
                 }
 
             }
