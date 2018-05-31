@@ -36,8 +36,8 @@ export class PersistCompareMatrixUseCaseImpl implements PersistCompareMatrixUseC
             this.repository.updateCriteria(criteriaA);
 
             const criteriaB = item.itemB;
-            criteriaA.comparisionValues.set(criteriaB, ratingValue == 8 ? 1 : ratingValue < 8 ? 9 - ratingValue : (1 / (ratingValue - 7)));
-            criteriaB.comparisionValues.set(criteriaA, ratingValue == 8 ? 1 : ratingValue > 8 ? ratingValue - 7 : (1 / (9 - ratingValue)));
+            criteriaA.comparisionValues.set(criteriaB.name, ratingValue == 8 ? 1 : ratingValue < 8 ? 9 - ratingValue : (1 / (ratingValue - 7)));
+            criteriaB.comparisionValues.set(criteriaA.name, ratingValue == 8 ? 1 : ratingValue > 8 ? ratingValue - 7 : (1 / (9 - ratingValue)));
             this.repository.updateCriteria(criteriaB);
 
         })

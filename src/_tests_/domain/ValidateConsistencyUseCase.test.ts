@@ -10,21 +10,21 @@ const criteriaTime = new Criteria('time');
 const criteriaLove = new Criteria('love');
 const criteriaMoney = new Criteria('money');
 const criteriaHappiness = new Criteria('happiness');
-criteriaTime.comparisionValues.set(criteriaLove, 4);
-criteriaTime.comparisionValues.set(criteriaHappiness, 9);
-criteriaTime.comparisionValues.set(criteriaMoney, 1 / 6);
+criteriaTime.comparisionValues.set(criteriaLove.name, 4);
+criteriaTime.comparisionValues.set(criteriaHappiness.name, 9);
+criteriaTime.comparisionValues.set(criteriaMoney.name, 1 / 6);
 
-criteriaLove.comparisionValues.set(criteriaMoney, 2);
-criteriaLove.comparisionValues.set(criteriaHappiness, 1);
-criteriaLove.comparisionValues.set(criteriaTime, 1 / 4);
+criteriaLove.comparisionValues.set(criteriaMoney.name, 2);
+criteriaLove.comparisionValues.set(criteriaHappiness.name, 1);
+criteriaLove.comparisionValues.set(criteriaTime.name, 1 / 4);
 
-criteriaHappiness.comparisionValues.set(criteriaMoney, 3);
-criteriaHappiness.comparisionValues.set(criteriaTime, 1 / 9);
-criteriaHappiness.comparisionValues.set(criteriaLove, 1);
+criteriaHappiness.comparisionValues.set(criteriaMoney.name, 3);
+criteriaHappiness.comparisionValues.set(criteriaTime.name, 1 / 9);
+criteriaHappiness.comparisionValues.set(criteriaLove.name, 1);
 
-criteriaMoney.comparisionValues.set(criteriaTime, 6);
-criteriaMoney.comparisionValues.set(criteriaHappiness, 1 / 3);
-criteriaMoney.comparisionValues.set(criteriaLove, 1 / 2);
+criteriaMoney.comparisionValues.set(criteriaTime.name, 6);
+criteriaMoney.comparisionValues.set(criteriaHappiness.name, 1 / 3);
+criteriaMoney.comparisionValues.set(criteriaLove.name, 1 / 2);
 
 
 repository.insertCriteria(criteriaTime);
@@ -86,21 +86,21 @@ it('returns true because key map is consistent', () => {
         time > happiness > love >  money
      */
 
-    criteriaTime.comparisionValues.set(criteriaLove, 5);
-    criteriaTime.comparisionValues.set(criteriaHappiness, 5);
-    criteriaTime.comparisionValues.set(criteriaMoney, 5);
+    criteriaTime.comparisionValues.set(criteriaLove.name, 5);
+    criteriaTime.comparisionValues.set(criteriaHappiness.name, 5);
+    criteriaTime.comparisionValues.set(criteriaMoney.name, 5);
 
-    criteriaLove.comparisionValues.set(criteriaMoney, 4);
-    criteriaLove.comparisionValues.set(criteriaHappiness, 1 / 4);
-    criteriaLove.comparisionValues.set(criteriaTime, 1 / 5);
+    criteriaLove.comparisionValues.set(criteriaMoney.name, 4);
+    criteriaLove.comparisionValues.set(criteriaHappiness.name, 1 / 4);
+    criteriaLove.comparisionValues.set(criteriaTime.name, 1 / 5);
 
-    criteriaHappiness.comparisionValues.set(criteriaMoney, 3);
-    criteriaHappiness.comparisionValues.set(criteriaTime, 1 / 5);
-    criteriaHappiness.comparisionValues.set(criteriaLove, 4);
+    criteriaHappiness.comparisionValues.set(criteriaMoney.name, 3);
+    criteriaHappiness.comparisionValues.set(criteriaTime.name, 1 / 5);
+    criteriaHappiness.comparisionValues.set(criteriaLove.name, 4);
 
-    criteriaMoney.comparisionValues.set(criteriaTime, 1 / 5);
-    criteriaMoney.comparisionValues.set(criteriaHappiness, 1 / 3);
-    criteriaMoney.comparisionValues.set(criteriaLove, 1 / 4);
+    criteriaMoney.comparisionValues.set(criteriaTime.name, 1 / 5);
+    criteriaMoney.comparisionValues.set(criteriaHappiness.name, 1 / 3);
+    criteriaMoney.comparisionValues.set(criteriaLove.name, 1 / 4);
 
 
     repository.insertCriteria(criteriaTime);
@@ -117,12 +117,12 @@ it('another positive check for inconsistency key', () => {
     const cA = new Criteria('A');
     const cB = new Criteria('B');
     const cC = new Criteria('C');
-    cA.comparisionValues.set(cB, 3);
-    cA.comparisionValues.set(cC, 2);
-    cB.comparisionValues.set(cA, 1 / 3);
-    cB.comparisionValues.set(cC, 4);
-    cC.comparisionValues.set(cA, 1 / 3);
-    cC.comparisionValues.set(cB, 1 / 4);
+    cA.comparisionValues.set(cB.name, 3);
+    cA.comparisionValues.set(cC.name, 2);
+    cB.comparisionValues.set(cA.name, 1 / 3);
+    cB.comparisionValues.set(cC.name, 4);
+    cC.comparisionValues.set(cA.name, 1 / 3);
+    cC.comparisionValues.set(cB.name, 1 / 4);
     // A > B, A > C, B > C
 
     repository.clearCriteria();
@@ -138,14 +138,14 @@ it('consistency check with evens', () => {
     const cA = new Criteria('A');
     const cB = new Criteria('B');
     const cC = new Criteria('C');
-    cA.comparisionValues.set(cB, 1);
-    cA.comparisionValues.set(cC, 3);
+    cA.comparisionValues.set(cB.name, 1);
+    cA.comparisionValues.set(cC.name, 3);
 
-    cB.comparisionValues.set(cA, 1);
-    cB.comparisionValues.set(cC, 1 / 4);
+    cB.comparisionValues.set(cA.name, 1);
+    cB.comparisionValues.set(cC.name, 1 / 4);
 
-    cC.comparisionValues.set(cA, 1 / 3);
-    cC.comparisionValues.set(cB, 4);
+    cC.comparisionValues.set(cA.name, 1 / 3);
+    cC.comparisionValues.set(cB.name, 4);
     // A = B, A > C, B < C
 
     repository.clearCriteria();

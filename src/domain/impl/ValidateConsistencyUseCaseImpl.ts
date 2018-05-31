@@ -25,12 +25,13 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
                     const comparable = await this.makeComparableAlternative(alt, value);
                     comparables.push(comparable);
                     if (!await this.validateCompareItems(comparables)) {
-                        reject(false);
+                        return false;
                     }
                 });
-
                 counter--;
+
             }
+
             while (counter != 0) {
 
             }
@@ -90,11 +91,11 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
 
         criteria.comparisionValues.forEach((value, comparedCriteria) => {
             if (value < 1) {
-                higher.push(comparedCriteria.name);
+                higher.push(comparedCriteria);
             } else if (value > 1) {
-                lower.push(comparedCriteria.name);
+                lower.push(comparedCriteria);
             } else
-                even.push(comparedCriteria.name);
+                even.push(comparedCriteria);
         });
         return {
             value: {

@@ -90,8 +90,8 @@ it('persists all key with scores in favor of alternative B', () => {
 
     subject.persistCriteriaMatrix(matrix);
 
-    const newCriteriaTime = new Criteria('time', new Map([[criteriaLove, 1 / 9]]));
-    const newCriteriaLove = new Criteria('love', new Map([[criteriaTime, 9]]));
+    const newCriteriaTime = new Criteria('time', new Map([[criteriaLove.name, 1 / 9]]));
+    const newCriteriaLove = new Criteria('love', new Map([[criteriaTime.name, 9]]));
 
     const result = repository.getCriteria();
     expect(result).toEqual([newCriteriaTime, newCriteriaLove]);
@@ -109,8 +109,8 @@ it('persists all alternatives with scores in favor of alternative A', () => {
 
     subject.persistCriteriaMatrix(matrix);
 
-    const newCriteriaTime = new Criteria('time', new Map([[criteriaLove, 9]]));
-    const newCriteriaLove = new Criteria('love', new Map([[criteriaTime, 1 / 9]]));
+    const newCriteriaTime = new Criteria('time', new Map([[criteriaLove.name, 9]]));
+    const newCriteriaLove = new Criteria('love', new Map([[criteriaTime.name, 1 / 9]]));
 
     const result = repository.getCriteria();
     expect(result).toEqual([newCriteriaTime, newCriteriaLove]);
@@ -128,8 +128,8 @@ it('persists all alternatives with equal scores', () => {
 
     subject.persistCriteriaMatrix(matrix);
 
-    const newCriteriaTime = new Criteria('time', new Map([[criteriaLove, 1]]));
-    const newCriteriaLove = new Criteria('love', new Map([[criteriaTime, 1]]));
+    const newCriteriaTime = new Criteria('time', new Map([[criteriaLove.name, 1]]));
+    const newCriteriaLove = new Criteria('love', new Map([[criteriaTime.name, 1]]));
 
     const result = repository.getCriteria();
     expect(result).toEqual([newCriteriaTime, newCriteriaLove]);

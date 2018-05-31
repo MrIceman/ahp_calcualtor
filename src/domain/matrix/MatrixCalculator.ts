@@ -45,8 +45,9 @@ export class MatrixCalculator {
             for (let j = 0; j < criteria.length; j++) {
                 if (i == j)
                     calcMatrix[i][j] = 1;
-                else
-                    calcMatrix[i][j] = criteria[j].goalScore;
+                else {
+                    calcMatrix[i][j] = criteria[j].comparisionValues.get(criteria[i].name);
+                }
             }
         }
     }
