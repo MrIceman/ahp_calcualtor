@@ -24,7 +24,7 @@ it('updates key correctly', () => {
 
 it('updates alternative correctly', () => {
 
-    const newAlternative = new Alternative('hustle', new Map([[criteria, 20], [criteriaB, 0]]), 20);
+    const newAlternative = new Alternative('hustle', new Map([[criteria.name, new Map([[alternativeB.name, 20]])]]));
 
     subject.updateAlternative(newAlternative);
 

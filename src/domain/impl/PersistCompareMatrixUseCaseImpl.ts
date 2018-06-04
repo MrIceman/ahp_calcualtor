@@ -17,12 +17,12 @@ export class PersistCompareMatrixUseCaseImpl implements PersistCompareMatrixUseC
 
             const alternativeA = item.itemA;
             const alternativeB = item.itemB;
-            alternativeA.criteriaScore.set(item.target,
-                new Map([[alternativeB, ratingValue == 8 ? 1 : ratingValue < 8 ? 9 - ratingValue : (1 / (ratingValue - 7))]]));
+            alternativeA.criteriaScore.set(item.target.name,
+                new Map([[alternativeB.name, ratingValue == 8 ? 1 : ratingValue < 8 ? 9 - ratingValue : (1 / (ratingValue - 7))]]));
             this.repository.updateAlternative(alternativeA);
 
-            alternativeB.criteriaScore.set(item.target,
-                new Map([[alternativeA, ratingValue == 8 ? 1 : ratingValue > 8 ? ratingValue - 7 : (1 / (9 - ratingValue))]]));
+            alternativeB.criteriaScore.set(item.target.name,
+                new Map([[alternativeA.name, ratingValue == 8 ? 1 : ratingValue > 8 ? ratingValue - 7 : (1 / (9 - ratingValue))]]));
             this.repository.updateAlternative(alternativeB);
 
         })

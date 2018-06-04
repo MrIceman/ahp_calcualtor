@@ -107,7 +107,7 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
         };
     }
 
-    public makeComparableAlternative(alternative: Alternative, comparedTo: Map<Alternative, number>): comparable {
+    public makeComparableAlternative(alternative: Alternative, comparedTo: Map<string, number>): comparable {
 
         const lower: Array<string> = [];
         const higher: Array<string> = [];
@@ -116,11 +116,11 @@ export class ValidateConsistencyUseCaseImpl implements ValidateConsistencyUseCas
         // prepare data structure
         comparedTo.forEach((value, comparedAlternative) => {
             if (value < 1) {
-                higher.push(comparedAlternative.name);
+                higher.push(comparedAlternative);
             } else if (value > 1) {
-                lower.push(comparedAlternative.name);
+                lower.push(comparedAlternative);
             } else
-                even.push(comparedAlternative.name);
+                even.push(comparedAlternative);
         });
 
         return {

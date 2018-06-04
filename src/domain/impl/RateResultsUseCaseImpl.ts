@@ -14,12 +14,61 @@ export class RateResultsUseCaseImpl implements RateResultsUseCase {
     }
 
     getRatedAlternatives(): Array<Alternative> {
-        return undefined;
+        const alternatives = this.repository.getAlternatives();
+        const criteria = this.repository.getCriteria();
+
+        /*
+            Alternative:
+                Name
+                CriteriaScore:
+                    [{
+                        Criteria: [{
+                            Alternative: Score
+                        }]
+                    }]
+         */
+
+        for (const crit of criteria) {
+
+            for (const alt of alternatives) {
+                // calculate column sum
+                let currentSum = 0;
+
+                for (let nextAlt of alternatives) {
+                    if (nextAlt === alt) {
+                        currentSum += 1;
+                        continue;
+                    }
+
+                    alt.criteriaScore.forEach((compareValues, crit_) => {
+                        compareValues.forEach((score, alternativeCompared) => {
+                            if (crit_ === crit.name && alternativeCompared === alt.name) {
+                                currentSum += score;
+                            }
+                        });
+
+                        compareValues.forEach((score, alternativeCompared) => {
+                            // Normalizing Values
+                            if (crit_ === crit.name && alternativeCompared === alt.name) {
+                                const normalizedScore = score / currentSum;
+                                compareValues.delete(alternativeCompared);
+                                compareValues.set(alternativeCompared, normalizedScore);
+                            }
+                        });
+                    });
+
+                }
+
+
+            }
+        }
+
+
+        return alternatives;
     }
 
     getRatedCriteria(): Array<Criteria> {
         const criteria = this.repository.getCriteria();
-        const values: Array<NominatedValue> = [];
         // calculate column sum
         for (let crit of criteria) {
             let currentSum: number = 0;
@@ -30,8 +79,6 @@ export class RateResultsUseCaseImpl implements RateResultsUseCase {
                 else
                     currentSum = currentSum + next.comparisionValues.get(crit.name);
             }
-            values.push({key: crit.name, value: currentSum});
-
             // update own priority score
 
             for (const critToCalculate of criteria) {
@@ -51,35 +98,57 @@ export class RateResultsUseCaseImpl implements RateResultsUseCase {
     }
 
     getNormedValues(): Array<NominatedValue> {
-        const criteria = this.repository.getCriteria();
         const values: Array<NominatedValue> = [];
-        // calculate column sum
-        for (let crit of criteria) {
-            let currentSum: number = 0;
+        const alternatives = this.repository.getAlternatives();
+        const criteria = this.repository.getCriteria();
 
-            for (let next of criteria) {
-                if (next === crit)
-                    currentSum += 1;
-                else
-                    currentSum = currentSum + next.comparisionValues.get(crit.name);
-            }
-            values.push({key: crit.name, value: currentSum});
+        /*
+            Alternative:
+                Name
+                CriteriaScore:
+                    [{
+                        Criteria: [{
+                            Alternative: Score
+                        }]
+                    }]
+         */
 
-            // update own priority score
+        for (const crit of criteria) {
 
-            for (const critToCalculate of criteria) {
-                if (critToCalculate === crit) {
-                    critToCalculate.comparisionValues.delete(crit.name);
-                    critToCalculate.comparisionValues.set(crit.name, 1 / currentSum);
+            for (const alt of alternatives) {
+                // calculate column sum
+                let currentSum = 0;
+
+                for (let nextAlt of alternatives) {
+                    if (nextAlt === alt) {
+                        currentSum += 1;
+                        continue;
+                    }
+
+                    alt.criteriaScore.forEach((compareValues, crit_) => {
+                        compareValues.forEach((score, alternativeCompared) => {
+                            if (crit_ === crit.name && alternativeCompared === alt.name) {
+                                currentSum += score;
+                            }
+                        });
+
+                        compareValues.forEach((score, alternativeCompared) => {
+                            // Normalizing Values
+                            if (crit_ === crit.name && alternativeCompared === alt.name) {
+                                const normalizedScore = score / currentSum;
+                                compareValues.delete(alternativeCompared);
+                                compareValues.set(alternativeCompared, normalizedScore);
+                            }
+                        });
+                    });
+                    values.push({key: `${crit} / ${alt}`, value: currentSum});
                 }
-                else {
-                    let newComparisionValue = critToCalculate.comparisionValues.get(crit.name) / currentSum;
-                    critToCalculate.comparisionValues.delete(crit.name);
-                    critToCalculate.comparisionValues.set(crit.name, newComparisionValue);
-                }
-            }
 
+
+            }
         }
+
+
         return values;
     }
 

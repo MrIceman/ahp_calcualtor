@@ -2,6 +2,10 @@ import {NominatedValue, RateResultsUseCaseImpl} from "../../domain/impl/RateResu
 import {Repository} from "../../data/Repository";
 import {Criteria} from "../../data/model/Criteria";
 import {Goal} from "../../data/model/Goal";
+import {ComparisionItem} from "../../data/model/ComparisionItem";
+import {Score} from "../../data/model/Score";
+import {ComparisionMatrix} from "../../domain/model/ComparisionMatrix";
+import {Alternative} from "../../data/model/Alternative";
 
 const repository = new Repository(new Goal(''), [], []);
 const visiblity = new Criteria('visiblity');
@@ -49,6 +53,25 @@ it('calculates correct global normed values', () => {
     ];
     const result = subject.getCriteriaPriority(subject.getRatedCriteria());
     expect(result).toEqual(expectedResult);
+});
 
+it('calculates global priorities for alternatives', async () => {
+    const criteriaWealth = new Criteria('Wealth');
+    const criteriaHappiness = new Criteria('Happiness');
+    const alternativeA = new Alternative('alternative A');
+    const alternativeB = new Alternative('alternative B');
+    alternativeA.criteriaScore.set(criteriaWealth.name, new Map([[alternativeB.name, 5]]));
+    alternativeA.criteriaScore.set(criteriaHappiness.name, new Map([[alternativeB.name, 9]]));
+    alternativeB.criteriaScore.set(criteriaWealth.name, new Map([[alternativeA.name, 1 / 5]]));
+    alternativeB.criteriaScore.set(criteriaHappiness.name, new Map([[alternativeA.name, 1 / 9]]));
 
+    repository.clearAlternatives();
+    repository.clearCriteria();
+    repository.insertCriteria(criteriaWealth);
+    repository.insertCriteria(criteriaHappiness);
+    repository.insertAlternative(alternativeA);
+    repository.insertAlternative(alternativeB);
+
+    const result = await subject.getNormedValues();
+    expect(result).toEqual(undefined);
 });

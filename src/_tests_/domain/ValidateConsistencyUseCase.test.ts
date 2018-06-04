@@ -163,11 +163,11 @@ it('tests make comparable alternativesd array', async () => {
     const alternativeB = new Alternative('alternative B');
     const alternativeC = new Alternative('alternative C');
 
-    alternativeA.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 9], [alternativeC, 1 / 4]]));
+    alternativeA.criteriaScore.set(criteriaWealth.name, new Map([[alternativeB.name, 9], [alternativeC.name, 1 / 4]]));
 
-    alternativeB.criteriaScore.set(criteriaWealth, new Map([[alternativeA, 1 / 9], [alternativeC, 6]]));
+    alternativeB.criteriaScore.set(criteriaWealth.name, new Map([[alternativeA.name, 1 / 9], [alternativeC.name, 6]]));
 
-    alternativeC.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 1 / 6], [alternativeA, 4]]));
+    alternativeC.criteriaScore.set(criteriaWealth.name, new Map([[alternativeB.name, 1 / 6], [alternativeA.name, 4]]));
 
     repository.clearAlternatives();
     repository.clearCriteria();
@@ -217,8 +217,8 @@ it('checks alternatives for positive consistency', async () => {
     const criteriaWealth = new Criteria('Wealth');
     const alternativeA = new Alternative('alternative A');
     const alternativeB = new Alternative('alternative B');
-    alternativeA.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 1 / 9]]));
-    alternativeB.criteriaScore.set(criteriaWealth, new Map([[alternativeA, 9]]));
+    alternativeA.criteriaScore.set(criteriaWealth.name, new Map([[alternativeB.name, 1 / 9]]));
+    alternativeB.criteriaScore.set(criteriaWealth.name, new Map([[alternativeA.name, 9]]));
     repository.insertCriteria(criteriaWealth);
     repository.insertAlternative(alternativeA);
     repository.insertAlternative(alternativeB);
@@ -239,11 +239,11 @@ it('checks alternatives for negative conssitency', async () => {
     const alternativeB = new Alternative('alternative B');
     const alternativeC = new Alternative('alternative C');
 
-    alternativeA.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 9], [alternativeC, 1 / 4]]));
+    alternativeA.criteriaScore.set(criteriaWealth.name, new Map([[alternativeB.name, 9], [alternativeC.name, 1 / 4]]));
 
-    alternativeB.criteriaScore.set(criteriaWealth, new Map([[alternativeA, 1 / 9], [alternativeC, 6]]));
+    alternativeB.criteriaScore.set(criteriaWealth.name, new Map([[alternativeA.name, 1 / 9], [alternativeC.name, 6]]));
 
-    alternativeC.criteriaScore.set(criteriaWealth, new Map([[alternativeB, 1 / 6], [alternativeA, 4]]));
+    alternativeC.criteriaScore.set(criteriaWealth.name, new Map([[alternativeB.name, 1 / 6], [alternativeA.name, 4]]));
 
     repository.clearAlternatives();
     repository.clearCriteria();

@@ -19,8 +19,8 @@ it('persists all alternatives with scores in favor of alternative B', () => {
 
     subject.persistAlternativeMatrix(matrix);
 
-    const newAlternativeA = new Alternative('alternative A', new Map([[crit, new Map([[alternativeB, 1 / 9]])]]));
-    const newAlternativeB = new Alternative('alternative B', new Map([[crit, new Map([[alternativeA, 9]])]]));
+    const newAlternativeA = new Alternative('alternative A', new Map([[crit.name, new Map([[alternativeB.name, 1 / 9]])]]));
+    const newAlternativeB = new Alternative('alternative B', new Map([[crit.name, new Map([[alternativeA.name, 9]])]]));
 
     const result = repository.getAlternatives();
     expect(result).toEqual([newAlternativeA, newAlternativeB]);
@@ -32,8 +32,8 @@ it('persists all alternatives with scores in favor of alternative A', () => {
 
     subject.persistAlternativeMatrix(matrix);
 
-    const newAlternativeA = new Alternative('alternative A', new Map([[crit, new Map([[alternativeB, 9]])]]));
-    const newAlternativeB = new Alternative('alternative B', new Map([[crit, new Map([[alternativeA, 1 / 9]])]]));
+    const newAlternativeA = new Alternative('alternative A', new Map([[crit.name, new Map([[alternativeB.name, 9]])]]));
+    const newAlternativeB = new Alternative('alternative B', new Map([[crit.name, new Map([[alternativeA.name, 1 / 9]])]]));
 
     const result = repository.getAlternatives();
     expect(result).toEqual([newAlternativeA, newAlternativeB]);
@@ -45,8 +45,8 @@ it('persists all alternatives with equal scores', () => {
 
     subject.persistAlternativeMatrix(matrix);
 
-    const newAlternativeA = new Alternative('alternative A', new Map([[crit, new Map([[alternativeB, 1]])]]));
-    const newAlternativeB = new Alternative('alternative B', new Map([[crit, new Map([[alternativeA, 1]])]]));
+    const newAlternativeA = new Alternative('alternative A', new Map([[crit.name, new Map([[alternativeB.name, 1]])]]));
+    const newAlternativeB = new Alternative('alternative B', new Map([[crit.name, new Map([[alternativeA.name, 1]])]]));
 
     const result = repository.getAlternatives();
     expect(result).toEqual([newAlternativeA, newAlternativeB]);
@@ -67,10 +67,10 @@ it('persists multiple rows with scores in favor of alternative B', () => {
     repository.insertAlternative(alternativeA);
     repository.insertAlternative(alternativeB);
     subject.persistAlternativeMatrix(matrix);
-    const newAlternativeA = new Alternative('alternative A', new Map([[criteriaWealth, new Map([[alternativeB, 1/9]])],
-        [criteriaHappiness, new Map([[alternativeB, 5]])]]));
-    const newAlternativeB = new Alternative('alternative B', new Map([[criteriaWealth, new Map([[alternativeA, 9]])],
-        [criteriaHappiness, new Map([[alternativeA, 1 / 5]])]]));
+    const newAlternativeA = new Alternative('alternative A', new Map([[criteriaWealth.name, new Map([[alternativeB.name, 1/9]])],
+        [criteriaHappiness.name, new Map([[alternativeB.name, 5]])]]));
+    const newAlternativeB = new Alternative('alternative B', new Map([[criteriaWealth.name, new Map([[alternativeA.name, 9]])],
+        [criteriaHappiness.name , new Map([[alternativeA.name, 1 / 5]])]]));
 
     const result = repository.getAlternatives();
     expect(result).toEqual([newAlternativeA, newAlternativeB]);
